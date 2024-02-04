@@ -60,11 +60,14 @@ membersRouter.delete('/tracker/technologies/remove/:name', auth, async (req, res
 
 membersRouter.patch('/tracker/members/update/:id', auth, async (req, res) => {
     let updatedResponse;
-    if(req.body.employee_name){
+    if (req.body.employee_name) {
         updatedResponse = await Members.updateOne({ _id: req.params.id }, { employee_name: req.body.employee_name });
     }
-    if(req.body.employee_id){
+    if (req.body.employee_id) {
         updatedResponse = await Members.updateOne({ _id: req.params.id }, { employee_id: req.body.employee_id });
+    }
+    if (req.body.technology_name) {
+        updatedResponse = await Members.updateOne({ _id: req.params.id }, { technology_name: req.body.technology_name });
     }
     return res.status(200).json(updatedResponse);
 });
