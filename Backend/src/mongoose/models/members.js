@@ -4,11 +4,16 @@ const mongoose = require("mongoose");
 const membersSchema = new mongoose.Schema({
     employee_id: {
         type: Number,
-        required: true
+        required: true,
+        min: 100000,
+        max: 3000000
     },
     employee_name: {
         type: String,
-        required: true
+        required: true,
+        minlength: 3,
+        // Built in match validator.
+        match: /[a-zA-Z ]+$/,
     },
     technology_name: {
         type: String,
@@ -16,7 +21,8 @@ const membersSchema = new mongoose.Schema({
     },
     experience: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
 });
 
