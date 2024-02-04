@@ -41,6 +41,7 @@ membersRouter.get('/tracker/technologies/get', auth, async (req, res) => {
     const teams = await Teams.find();
     res.status(200).json(teams);
 });
+
 membersRouter.post('/tracker/technologies/add', auth, async (req, res) => {
     Teams.create({ name: req.body.technology_name }, function (err, data) {
         if (err) {
@@ -51,5 +52,10 @@ membersRouter.post('/tracker/technologies/add', auth, async (req, res) => {
     })
 });
 
+membersRouter.delete('/tracker/technologies/remove/:name', auth, async (req, res) => {
+    const teams = await Teams.deleteOne({ name: req.params.name });
+    const members = await Members.deleteMany({ technology_name: req.params.name });
+    res.status(200).json([teams, members]);
+});
 module.exports = membersRouter;
 
