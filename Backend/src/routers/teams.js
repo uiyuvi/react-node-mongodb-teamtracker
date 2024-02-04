@@ -37,5 +37,10 @@ membersRouter.post('/tracker/members/add', auth, (req, res) => {
     });
 });
 
+membersRouter.get('/tracker/technologies/get', auth, async (req, res) => {
+    const teams = await Teams.find();
+    res.status(200).json(teams);
+});
+
 module.exports = membersRouter;
 
