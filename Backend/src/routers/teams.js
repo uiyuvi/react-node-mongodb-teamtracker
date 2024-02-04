@@ -69,6 +69,9 @@ membersRouter.patch('/tracker/members/update/:id', auth, async (req, res) => {
     if (req.body.technology_name) {
         updatedResponse = await Members.updateOne({ _id: req.params.id }, { technology_name: req.body.technology_name });
     }
+    if (req.body.experience) {
+        updatedResponse = await Members.updateOne({ _id: req.params.id }, { experience: req.body.experience });
+    }
     return res.status(200).json(updatedResponse);
 });
 module.exports = membersRouter;
