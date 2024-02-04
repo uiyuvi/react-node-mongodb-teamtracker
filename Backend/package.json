@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node_modules/.bin/pm2 start src/index.js --watch",
+    "start": "pm2 start src/index.js --watch",
     "test": "jest --forceExit",
-    "stop": "node_modules/.bin/pm2 kill"
+    "stop": "pm2 kill"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +19,8 @@
     "mongoose": "^5.10.9",
     "pm2": "^4.5.0",
     "supertest": "^5.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
