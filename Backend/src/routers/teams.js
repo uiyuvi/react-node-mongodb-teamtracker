@@ -59,20 +59,47 @@ membersRouter.delete('/tracker/technologies/remove/:name', auth, async (req, res
 });
 
 membersRouter.patch('/tracker/members/update/:id', auth, async (req, res) => {
-    let updatedResponse;
     if (req.body.employee_name) {
-        updatedResponse = await Members.updateOne({ _id: req.params.id }, { employee_name: req.body.employee_name });
+        Members.updateOne({ _id: req.params.id }, { employee_name: req.body.employee_name }, { runValidators: true })
+            .then(function (updatedData) {
+                var data = { message: "success", data: updatedData };
+                return res.status(200).json(data);
+            })
+            .catch(function (err) {
+                return res.status(400).json({ error: "Update failed" });
+            });
     }
     if (req.body.employee_id) {
-        updatedResponse = await Members.updateOne({ _id: req.params.id }, { employee_id: req.body.employee_id });
+        Members.updateOne({ _id: req.params.id }, { employee_id: parseInt(req.body.employee_id) }, { runValidators: true })
+            .then(function (updatedData) {
+                var data = { message: "success", data: updatedData };
+                return res.status(200).json(data);
+            })
+            .catch(function (err) {
+                return res.status(400).json({ error: "Update failed" });
+            });
     }
     if (req.body.technology_name) {
-        updatedResponse = await Members.updateOne({ _id: req.params.id }, { technology_name: req.body.technology_name });
+        Members.updateOne({ _id: req.params.id }, { technology_name: req.body.technology_name }, { runValidators: true })
+            .then(function (updatedData) {
+                var data = { message: "success", data: updatedData };
+                return res.status(200).json(data);
+            })
+            .catch(function (err) {
+                return res.status(400).json({ error: "Update failed" });
+            });
     }
     if (req.body.experience) {
-        updatedResponse = await Members.updateOne({ _id: req.params.id }, { experience: req.body.experience });
+        Members.updateOne({ _id: req.params.id }, { experience: req.body.experience }, { runValidators: true })
+            .then(function (updatedData) {
+                var data = { message: "success", data: updatedData };
+                return res.status(200).json(data);
+            })
+            .catch(function (err) {
+                return res.status(400).json({ error: "Update failed" });
+            });
     }
-    return res.status(200).json(updatedResponse);
+
 });
 module.exports = membersRouter;
 
