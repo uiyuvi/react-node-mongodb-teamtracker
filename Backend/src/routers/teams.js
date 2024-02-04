@@ -41,6 +41,15 @@ membersRouter.get('/tracker/technologies/get', auth, async (req, res) => {
     const teams = await Teams.find();
     res.status(200).json(teams);
 });
+membersRouter.post('/tracker/technologies/add', auth, async (req, res) => {
+    Teams.create({ name: req.body.technology_name }, function (err, data) {
+        if (err) {
+            console.log('error ignore');
+            return res.status(400).json({ error: err });
+        }
+        return res.status(201).json("created");
+    })
+});
 
 module.exports = membersRouter;
 
