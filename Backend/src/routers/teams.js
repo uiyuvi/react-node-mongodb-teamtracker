@@ -124,5 +124,10 @@ membersRouter.get('/tracker/members/display', auth, async (req, res) => {
     const members = await Members.find(query).sort(sort);
     res.status(200).json(members);
 });
+
+membersRouter.delete('/tracker/members/delete/:id', auth, async (req, res) => {
+    const members = await Members.deleteOne({ _id: req.params.id });
+    res.status(200).json(members);
+});
 module.exports = membersRouter;
 
