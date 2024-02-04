@@ -57,5 +57,10 @@ membersRouter.delete('/tracker/technologies/remove/:name', auth, async (req, res
     const members = await Members.deleteMany({ technology_name: req.params.name });
     res.status(200).json([teams, members]);
 });
+
+membersRouter.patch('/tracker/members/update/:id', auth, async (req, res) => {
+    const updatedResponse = await Members.updateOne({ _id: req.params.id }, { employee_name: req.body.employee_name });
+    return res.status(200).json(updatedResponse);
+});
 module.exports = membersRouter;
 
