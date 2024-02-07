@@ -21,9 +21,16 @@ class AddMember extends Component {
     //if local storage had token proceed to set data in state
     //if local storage does not have token route back to login page
     //code goes here to set value returned from handleGetTeam to teams state
+    componentDidMount = async () => {
+      if (!this.getLocalStorage()) {
+        this.props.history && this.props.history.push('/login');
+        return;
+      }
+    }
 
   getLocalStorage = () => {
     //code goes here to get token value from local storage
+    return localStorage.getItem('authToken');
   };
 
   handleGetTeam = async () => {
