@@ -15,6 +15,7 @@ class Home extends Component {
     experience: "",
     experienceFilter: "",
     checked: "Expericence",
+    teamName: ""
   };
 
   componentDidMount = async () => {
@@ -74,10 +75,20 @@ class Home extends Component {
 
   handleChange = (e) => {
     //code goes here to handle onChange event for input fields except radio
+    this.setState({
+      [e.target.name]: e.target.value
+    })
   };
 
   handleDeleteMembers = async (id) => {
     //code goes here to return the response status of delete api
+    const response = await fetch(`/api/tracker/members/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${this.getLocalStorage()}`,
+      },
+      method: "Delete",
+    });
+    return response.json();
   };
 
   handleDelete = async (e, id) => {
@@ -86,10 +97,24 @@ class Home extends Component {
 
   handleEdit = (id) => {
     //code goes here to handle the edit button
+    const toBeEditedMember = this.state.initialData.find((member) => {
+      return member._id === id;
+    })
+    console.log('toBeEditedMember', toBeEditedMember);
+    this.setState({
+      edit: true,
+      editId: id,
+      empId: toBeEditedMember.employee_id,
+      empName: toBeEditedMember.employee_name,
+      experience: toBeEditedMember.experience
+    })
   };
 
   handleChecked = (value) => {
     //code goes here for the onChange event of radio input fields
+    this.setState({
+      checked: value
+    })
   };
 
   handleClear = async () => {
@@ -106,6 +131,19 @@ class Home extends Component {
 
   handleEditRequest = async () => {
     //code goes here to return response status of update api
+    const response = await fetch(`/api/tracker/members/update/${this.state.editId}`, {
+      body: JSON.stringify({
+        employee_id: this.state.empId,
+        employee_name: this.state.empName,
+        experience: this.state.experience
+      }),
+      headers: {
+        Authorization: `Bearer ${this.getLocalStorage()}`,
+        "Content-type": "application/json; charset=UTF-8",
+      },
+      method: "PATCH",
+    });
+    return response.json();
   };
 
   handleDone = async (e) => {
@@ -113,16 +151,42 @@ class Home extends Component {
   };
 
   render() {
+    let isButtonDisabled = false;
+    if (this.state.checked === "Expericence" && this.state.experienceFilter === "") {
+      isButtonDisabled = true;
+    }
+    if (this.state.checked === "Team" && this.state.teamName === "") {
+      isButtonDisabled = true;
+    }
+    if (this.state.checked === "Both" && (this.state.experienceFilter === "" || this.state.teamName === "")) {
+      isButtonDisabled = true
+    }
+    console.log(isButtonDisabled, this.state.checked, this.state.experienceFilter, this.state.teamName)
+
     return (
       <>
         <Header />
         <section>
           <label>Filter By</label>
           {/*code goes here for Radio field, */}
+          <input type="radio" id="Expericence" name="Expericence" value="Expericence" checked={this.state.checked === "Expericence"} onChange={(e) => this.handleChecked(e.target.value)} />
+          <label htmlFor="Expericence">Expericence</label>
+          <input type="radio" id="Team" name="Team" value="Team" checked={this.state.checked === "Team"} onChange={(e) => this.handleChecked(e.target.value)} />
+          <label htmlFor="Team">Team</label>
+          <input type="radio" id="Both" name="Both" value="Both" checked={this.state.checked === "Both"} onChange={(e) => this.handleChecked(e.target.value)} />
+          <label htmlFor="Both">Both</label>
           {/* Select and Input */}
-          <button>
-            Go
-          </button>
+          <select name="teamName" onChange={this.handleChange}>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+          </select>
+          <input type="number" placeholder="Experience" list="quantities" name="experienceFilter" onChange={this.handleChange} />
+          <datalist id="quantities">
+            <option value="0"></option>
+            <option value="1"></option>
+            <option value="2"></option>
+          </datalist>
+          <button disabled={isButtonDisabled}>Go</button>
           <button>Clear</button>
         </section>
         {/* display teams */}
