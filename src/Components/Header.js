@@ -7,22 +7,26 @@ import home from "../icon/home.png";
 export function Header(props) {
   function handleLogout() {
     // code goes here to handle logout
+    props.history.push('/login');
   }
   function handleHome() {
     //code goes here to handle home icon
+    props.history.push('/');
   }
 
   return (
     <>
       <nav>
-      {/*code goes here for Add Member and Move Member Link*/}
-      {/*Link should navigate to respective pages*/}
+        {/*code goes here for Add Member and Move Member Link*/}
+        {/*Link should navigate to respective pages*/}
+        <Link to="/addMember">Add Member</Link>
+        <Link to="/moveMember">Move Member</Link>
       </nav>
       <header>
         <h1>
           Team Tracker
-          <img src={logout} alt=""/>
-          <img src={home} alt=""/>
+          <img src={logout} alt="" onClick={() => handleLogout()} />
+          <img src={home} alt="" onClick={() => handleHome()} />
         </h1>
       </header>
     </>
