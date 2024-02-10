@@ -23,6 +23,11 @@ class Home extends Component {
       this.props.history && this.props.history.push('/login');
       return;
     }
+    this.updateMembers();
+    this.updateTeam();
+  }
+
+  updateMembers = async () => {
     const members = await this.handleGetMembers("/api/tracker/members/display");
     const groupedMembers = members.reduce((acc, obj) => {
       const key = obj.technology_name;
@@ -30,11 +35,16 @@ class Home extends Component {
       return { ...acc, [key]: [...curGroup, obj] };
     }, {});
     const groupedMembersWithoutKey = Object.keys(groupedMembers).map((key) => groupedMembers[key]);
-    const techTeam = await this.handleGetTech();
+
     this.setState({
       initialData: members,
-      team: techTeam,
       data: groupedMembersWithoutKey
+    })
+  }
+  updateTeam = async () => {
+    const techTeam = await this.handleGetTech();
+    this.setState({
+      team: techTeam
     })
   }
 
@@ -93,6 +103,13 @@ class Home extends Component {
 
   handleDelete = async (e, id) => {
     //code goes here to handle delete member using return value of handleDeleteMembers function
+    if (e) {
+      e.preventDefault()
+    }
+    const isDeleted = await this.handleDeleteMembers(id);
+    if (isDeleted) {
+      this.updateMembers();
+    }
   };
 
   handleEdit = (id) => {
@@ -117,16 +134,34 @@ class Home extends Component {
     })
   };
 
-  handleClear = async () => {
+  handleClear = async (e) => {
     //code goes here to handle the clear button
+    if (e) {
+      e.preventDefault()
+    }
+    this.setState({
+      experienceFilter: "",
+      checked: "Expericence",
+      teamName: ""
+    })
   }
 
-  handleGo = async () => {
+  handleGo = async (e) => {
     //code goes here to handle go button
+    if (e) {
+      e.preventDefault()
+    }
   };
 
   handleCancel = () => {
     //code goes here for cancel button 
+    this.setState({
+      edit: false,
+      editId: "",
+      empId: "",
+      empName: "",
+      experience: ""
+    })
   };
 
   handleEditRequest = async () => {
@@ -147,7 +182,13 @@ class Home extends Component {
   };
 
   handleDone = async (e) => {
-    //code goes here to handle Done button using the return value of handleEditRequest function  
+    //code goes here to handle Done button using the return value of handleEditRequest function 
+    e.preventDefault();
+    const isDone = this.handleEditRequest();
+    if (isDone) {
+      this.updateMembers();
+      this.handleCancel();
+    }
   };
 
   render() {
@@ -177,8 +218,8 @@ class Home extends Component {
           <label htmlFor="Both">Both</label>
           {/* Select and Input */}
           <select name="teamName" onChange={this.handleChange}>
-            <option value="Frontend">Frontend</option>
-            <option value="Backend">Backend</option>
+            <option value="">Select Team</option>
+            {this.state.team.map(({ name, _id }) => <option key={_id} value={name}>{name}</option>)}
           </select>
           <input type="number" placeholder="Experience" list="quantities" name="experienceFilter" onChange={this.handleChange} />
           <datalist id="quantities">
@@ -186,11 +227,25 @@ class Home extends Component {
             <option value="1"></option>
             <option value="2"></option>
           </datalist>
-          <button disabled={isButtonDisabled}>Go</button>
-          <button>Clear</button>
+          <button type="button" disabled={isButtonDisabled} onClick={(e) => this.handleGo(e)}>Go</button>
+          <button type="button" onClick={(e) => this.handleClear(e)}>Clear</button>
         </section>
         {/* display teams */}
-        {this.state.team.length > 0 && <Teams team={this.state.team} />}
+        {this.state.team.length > 0 &&
+          <Teams
+            data={this.state.data}
+            handleCancel={this.handleCancel}
+            handleChange={this.handleChange}
+            handleDone={this.handleDone}
+            handleEdit={this.handleEdit}
+            handleDelete={this.handleDelete}
+            edit={this.state.edit}
+            editId={this.state.editId}
+            empId={this.state.empId}
+            empName={this.state.empName}
+            experience={this.state.experience}
+
+          />}
         {this.state.team.length === 0 && <div className="noTeam">No Teams Found</div>}
         {/*Make sure, props name passed in child Component same as the state or function name which you are passing */}
       </>
