@@ -27,8 +27,8 @@ class Home extends Component {
     this.updateTeam();
   }
 
-  updateMembers = async () => {
-    const members = await this.handleGetMembers("/api/tracker/members/display");
+  updateMembers = async (url = "/api/tracker/members/display") => {
+    const members = await this.handleGetMembers(url);
     const groupedMembers = members.reduce((acc, obj) => {
       const key = obj.technology_name;
       const curGroup = acc[key] ?? [];
@@ -151,6 +151,17 @@ class Home extends Component {
     if (e) {
       e.preventDefault()
     }
+    let url = "/api/tracker/members/display";
+    if (this.state.experienceFilter.length > 0) {
+      url = `/api/tracker/members/display?experience=${this.state.experienceFilter}`
+    }
+    if (this.state.teamName.length > 0) {
+      url = `/api/tracker/members/display?tech=${this.state.teamName}`
+    }
+    if (this.state.teamName.length > 0 && this.state.experienceFilter.length > 0) {
+      url = `/api/tracker/members/display?experience=${this.state.experienceFilter}&&tech=${this.state.teamName}`
+    }
+    this.updateMembers(url)
   };
 
   handleCancel = () => {
@@ -221,7 +232,7 @@ class Home extends Component {
             <option value="">Select Team</option>
             {this.state.team.map(({ name, _id }) => <option key={_id} value={name}>{name}</option>)}
           </select>
-          <input type="number" placeholder="Experience" list="quantities" name="experienceFilter" onChange={this.handleChange} />
+          <input type="number" value={this.state.experienceFilter} placeholder="Experience" list="quantities" name="experienceFilter" onChange={this.handleChange} />
           <datalist id="quantities">
             <option value="0"></option>
             <option value="1"></option>
