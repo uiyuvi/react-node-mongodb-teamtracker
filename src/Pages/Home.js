@@ -143,7 +143,8 @@ class Home extends Component {
       experienceFilter: "",
       checked: "Expericence",
       teamName: ""
-    })
+    });
+    this.updateMembers();
   }
 
   handleGo = async (e) => {
@@ -242,7 +243,7 @@ class Home extends Component {
           <button type="button" onClick={(e) => this.handleClear(e)}>Clear</button>
         </section>
         {/* display teams */}
-        {this.state.team.length > 0 &&
+        {this.state.data.length > 0 &&
           <Teams
             data={this.state.data}
             handleCancel={this.handleCancel}
@@ -257,7 +258,7 @@ class Home extends Component {
             experience={this.state.experience}
 
           />}
-        {this.state.team.length === 0 && <div className="noTeam">No Teams Found</div>}
+        {this.state.data.length === 0 && <div className="noTeam">No Teams Found</div>}
         {/*Make sure, props name passed in child Component same as the state or function name which you are passing */}
       </>
     );
