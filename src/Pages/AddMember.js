@@ -232,7 +232,7 @@ class AddMember extends Component {
                 {/*teams with a x and cancel button should be displayed in a table*/}
                 <table>
                   <tbody>
-                    {this.state.teams.map(({ name, _id }) => <tr key={_id} value={name}><td>{name}</td><td><img alt="x" onClick={(e) => this.handleRemoveTeam(e, name)}></img></td></tr>)}
+                    {this.state.teams.map(({ name, _id }) => <tr key={_id} value={name}><td>{name}</td><td><img height="10px" width="10px" src={remove} alt="x" onClick={(e) => this.handleRemoveTeam(e, name)}></img></td></tr>)}
                     <tr><td><button onClick={(e) => this.handleCancel(e, "Delete")}>Cancel</button></td></tr>
                   </tbody>
                 </table>
