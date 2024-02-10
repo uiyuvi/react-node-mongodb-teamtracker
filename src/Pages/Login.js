@@ -22,7 +22,7 @@ class Login extends Component {
   loginRequest = async () => {
     //code goes here to return the response after hitting login api
     const response = await fetch("/api/admin/login", {
-      method: "POST",
+      method: "post",
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
