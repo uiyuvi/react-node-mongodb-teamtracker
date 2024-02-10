@@ -105,12 +105,6 @@ membersRouter.patch('/tracker/members/update/:id', auth, async (req, res) => {
 membersRouter.get('/tracker/members/display', auth, async (req, res) => {
     let query = {};
     let sort = {}
-    if (req.query.tech) {
-        query.technology_name = req.query.tech;
-    }
-    if (req.query.experience) {
-        query.experience = { $gte: parseInt(req.query.experience) }
-    }
     if (req.query.tech && req.query.experience) {
         query = {
             $or: [
@@ -119,10 +113,23 @@ membersRouter.get('/tracker/members/display', auth, async (req, res) => {
             ]
         }
         sort = { experience: -1 }
+        const members = await Members.find(query).sort(sort);
+        return res.status(200).json(members);
     }
-
+    if (req.query.tech) {
+        query.technology_name = req.query.tech;
+        const members = await Members.find(query).sort(sort);
+        return res.status(200).json(members);
+    }
+    if (req.query.experience) {
+        query.experience = { $gte: parseInt(req.query.experience) }
+        sort = { experience: 1 }
+        const members = await Members.find(query).sort(sort);
+        return res.status(200).json(members);
+    }
     const members = await Members.find(query).sort(sort);
-    res.status(200).json(members);
+    return res.status(200).json(members);
+    
 });
 
 membersRouter.delete('/tracker/members/delete/:id', auth, async (req, res) => {
